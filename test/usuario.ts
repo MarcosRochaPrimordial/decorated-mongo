@@ -1,11 +1,12 @@
-import { DecoratedMongo, Column } from './../lib/main';
+import { DecoratedMongo, Required } from './../lib/main';
 
 export class Usuario extends DecoratedMongo {
-    @Column()
+    @Required('Usuario')
     nome: string;
 
     login: string;
 
+    @Required('Usuario')
     senha: string;
 
     constructor(url, db) {
