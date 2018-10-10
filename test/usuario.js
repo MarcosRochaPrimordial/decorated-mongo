@@ -31,9 +31,12 @@ class Usuario extends main_1.DecoratedMongo {
     }
 }
 __decorate([
-    main_1.Required('Usuario')
+    main_1.Required()
 ], Usuario.prototype, "nome", void 0);
 __decorate([
-    main_1.Required('Usuario')
+    main_1.Required()
+], Usuario.prototype, "login", void 0);
+__decorate([
+    main_1.Required()
 ], Usuario.prototype, "senha", void 0);
 exports.Usuario = Usuario;

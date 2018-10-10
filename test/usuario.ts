@@ -1,12 +1,15 @@
 import { DecoratedMongo, Required } from './../lib/main';
 
 export class Usuario extends DecoratedMongo {
-    @Required('Usuario')
+    _id: string;
+
+    @Required()
     nome: string;
 
+    @Required()
     login: string;
 
-    @Required('Usuario')
+    @Required()
     senha: string;
 
     constructor(url, db) {

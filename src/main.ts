@@ -1,31 +1,27 @@
 import { MongoClient } from "mongodb";
 import 'reflect-metadata';
 
-class ObjectProperties {
-    private static _instance: ObjectProperties = null;
-    private properties: any = {};
+class RequiredRule {
+    private static _instance: RequiredRule = null;
 
     private constructor() {
-        ObjectProperties._instance = this;
+        RequiredRule._instance = this;
     }
 
     public static getInstance() {
-        if (ObjectProperties._instance === null) {
-            ObjectProperties._instance = new ObjectProperties();
+        if (RequiredRule._instance === null) {
+            RequiredRule._instance = new RequiredRule();
         }
 
-        return ObjectProperties._instance;
+        return RequiredRule._instance;
     }
 
-    public getProperties(): any {
-        return this.properties;
-    }
-
-    public setProperties(targetName, propertyKey) {
-        if (this.properties[targetName] === null || this.properties[targetName] === undefined) {
-            this.properties[targetName] = [];
+    public evaluate(target: any, value: any, key: string) {
+        if(value) {
+            return null;
         }
-        this.properties[targetName].push(propertyKey);
+
+        return `${key} is required and must be sent`;
     }
 }
 
@@ -40,18 +36,25 @@ export class DecoratedMongo {
     }
 
     public save(collectionName: string, object: any, callback) {
-        let objectProperties = ObjectProperties.getInstance();
-        let errors = null;
-        objectProperties.getProperties()[collectionName].forEach(value => {
-            if (object[value] === undefined || object[value] === null) {
-                if(errors === null) {
-                    errors = [];
+        const keys = Reflect.getMetadata('validation', object) as string[];
+        let errors: string[] = [];
+        if(Array.isArray(keys)) {
+            for(const key of keys) {
+                const rules = Reflect.getMetadata('validation', object, key) as RequiredRule[];
+                if(!Array.isArray(rules)) {
+                    continue;
                 }
-                errors.push(`${value} is required and must be sent`);
-            }
-        });
 
-        if (errors != null) {
+                for(const rule of rules) {
+                    const error = rule.evaluate(object, object[key], key);
+                    if(error) {
+                        errors.push(error);
+                    }
+                }
+            }
+        }
+
+        if (errors.length !== 0) {
             callback(errors, null);
         } else {
             this.initMongoClient((db) => {
@@ -83,10 +86,21 @@ export class DecoratedMongo {
     }
 }
 
-export function Required(targetName: string) {
-    return function (target: any, propertyKey: string) {
-        let objectProperties = ObjectProperties.getInstance();
+function addValidationRule(target: any, propertyKey: string, rule: RequiredRule) {
+    let rules: RequiredRule[] = Reflect.getMetadata('validation', target, propertyKey) || [];
+    rules.push(rule);
 
-        objectProperties.setProperties(targetName, propertyKey);
+    let properties: string[] = Reflect.getMetadata('validation', target) || [];
+    if(properties.indexOf(propertyKey) < 0) {
+        properties.push(propertyKey);
+    }
+
+    Reflect.defineMetadata('validation', properties, target);
+    Reflect.defineMetadata('validation', rules, target, propertyKey);
+}
+
+export function Required() {
+    return function (target: any, propertyKey: string) {
+        addValidationRule(target, propertyKey, RequiredRule.getInstance());
     }
 }
