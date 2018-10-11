@@ -1,8 +1,9 @@
 {
   "name": "decorated-mongo",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
-  "main": "src/main.js",
+  "main": "lib/main.js",
+  "types": "lib/main.d.ts",
   "scripts": {
     "build": "tsc"
   },
