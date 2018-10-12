@@ -12,10 +12,10 @@ class Usuario extends main_1.DecoratedMongo {
         super();
     }
     getId() {
-        return this.id;
+        return this.codigo;
     }
-    setId(id) {
-        this.id = id;
+    setId(codigo) {
+        this.codigo = codigo;
     }
     getNome() {
         return this.nome;
@@ -38,7 +38,7 @@ class Usuario extends main_1.DecoratedMongo {
 }
 __decorate([
     main_1.Id('usuario')
-], Usuario.prototype, "id", void 0);
+], Usuario.prototype, "codigo", void 0);
 __decorate([
     main_1.Required()
 ], Usuario.prototype, "nome", void 0);

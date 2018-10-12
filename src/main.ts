@@ -69,10 +69,75 @@ export class MongoServer {
 
 export class DecoratedMongo {
 
-    public save(callback = null) {
-        const keys = Reflect.getMetadata('validation', this) as string[];
+    public save(callback) {
         const idKey = Reflect.getMetadata('identification', this) as string;
-        let collectionName = Reflect.getMetadata('collection', this) as string;
+        const collectionName = Reflect.getMetadata('collection', this) as string;
+
+        let errors = this.requiredRulesMiddleware() || [];
+
+        if (errors.length !== 0) {
+            if(callback != null) {
+                callback(errors);
+            }
+        } else {
+            let mongoInstance = ServiceMongoDb.getInstance();
+            this.initMongoServer(mongoInstance.getUrlMongo(), (error, db) => {
+                if(error) {
+                    callback(error);
+                } else {
+                    let dbo = db.db(mongoInstance.getDbMongo());
+                    dbo.collection(collectionName).insertOne(this, (err, result) => {
+                        this[idKey] = this['_id'];
+                        delete this['_id'];
+                        if(callback != null) {
+                            callback(err);
+                        }
+                        db.close();
+                    });
+                }
+            });
+        }
+    }
+
+    public find(callback, limit = 0) {
+        const idKey = Reflect.getMetadata('identification', this) as string;
+        const collectionName = Reflect.getMetadata('collection', this) as string;
+
+        let mongoInstance = ServiceMongoDb.getInstance();
+        this.initMongoServer(mongoInstance.getUrlMongo(), (error, db) => {
+            if(error) {
+                callback(error);
+            } else {
+                let dbo = db.db(mongoInstance.getDbMongo());
+                delete this[idKey];
+                dbo.collection(collectionName).find(this).limit(limit).toArray((err, result) => {
+                    callback(err, result);
+                });
+            }
+        });
+    }
+
+    public findById(callback) {
+        const idKey = Reflect.getMetadata('identification', this) as string;
+        const collectionName = Reflect.getMetadata('collection', this) as string;
+        let mongoInstance = ServiceMongoDb.getInstance();
+
+        console.log(this[idKey]);
+        this.initMongoServer(mongoInstance.getUrlMongo(), (error, db) => {
+            if(error) {
+                callback(error);
+            } else {
+                let dbo = db.db(mongoInstance.getDbMongo());
+                dbo.collection(collectionName).find({_id: this[idKey]}).toArray((err, result) => {
+                    callback(err, result);
+                });
+            }
+        });
+
+    }
+
+    protected requiredRulesMiddleware() {
+        const keys = Reflect.getMetadata('validation', this) as string[];
         let errors: string[] = [];
         if(Array.isArray(keys)) {
             for(const key of keys) {
@@ -90,32 +155,12 @@ export class DecoratedMongo {
             }
         }
 
-        if (errors.length !== 0) {
-            if(callback != null) {
-                callback(errors, null);
-            }
-        } else {
-            let mongoInstance = ServiceMongoDb.getInstance();
-            this.initMongoServer(mongoInstance.getUrlMongo(), (db) => {
-                let dbo = db.db(mongoInstance.getDbMongo());
-                dbo.collection(collectionName).save(this, (err, result) => {
-                    this[idKey] = result.ops[0]._id;
-                    if(callback != null) {
-                        callback(err, result);
-                    }
-                    db.close();
-                });
-            });
-        }
+        return errors;
     }
 
     protected initMongoServer(url, callback) {
         MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
-            if(err) {
-                console.log(err);
-            } else {
-                callback(db);
-            }
+            callback(err, db);
         });
     }
 }

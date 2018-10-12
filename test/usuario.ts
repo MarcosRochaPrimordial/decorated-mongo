@@ -2,7 +2,7 @@ import { DecoratedMongo, Required, Id } from './../lib/main';
 
 export class Usuario extends DecoratedMongo {
     @Id('usuario')
-    id: string;
+    codigo: string;
 
     @Required()
     nome: string;
@@ -18,11 +18,11 @@ export class Usuario extends DecoratedMongo {
     }
 
     getId(): string {
-        return this.id;
+        return this.codigo;
     }
 
-    setId(id: string) {
-        this.id = id;
+    setId(codigo: string) {
+        this.codigo = codigo;
     }
 
     getNome(): string {
