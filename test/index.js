@@ -1,14 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const usuario_1 = require("./usuario");
-let usuario = new usuario_1.Usuario("mongodb://localhost:27017/", "api");
-usuario.setNome("Marcos");
-usuario.setLogin("devmarcos");
-usuario.save('Usuario', usuario, (err, result) => {
-    if (err) {
-        console.log(err);
-    }
-    else {
-        console.log(result);
-    }
-});
+const main_1 = require("./../lib/main");
+main_1.MongoServer.use('mongodb://localhost:27017', 'api');
+let usuario = new usuario_1.Usuario();
+usuario.setNome("fulanodev");
+usuario.setLogin("deverson1232341");
+usuario.setSenha("3028u40823820938h2h");
+usuario.save();

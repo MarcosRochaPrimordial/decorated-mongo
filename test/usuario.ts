@@ -1,7 +1,8 @@
-import { DecoratedMongo, Required } from './../lib/main';
+import { DecoratedMongo, Required, Id } from './../lib/main';
 
 export class Usuario extends DecoratedMongo {
-    _id: string;
+    @Id('usuario')
+    id: string;
 
     @Required()
     nome: string;
@@ -12,8 +13,16 @@ export class Usuario extends DecoratedMongo {
     @Required()
     senha: string;
 
-    constructor(url, db) {
-        super(url, db);
+    constructor() {
+        super();
+    }
+
+    getId(): string {
+        return this.id;
+    }
+
+    setId(id: string) {
+        this.id = id;
     }
 
     getNome(): string {

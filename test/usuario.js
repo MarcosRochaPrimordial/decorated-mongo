@@ -8,8 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 const main_1 = require("./../lib/main");
 class Usuario extends main_1.DecoratedMongo {
-    constructor(url, db) {
-        super(url, db);
+    constructor() {
+        super();
+    }
+    getId() {
+        return this.id;
+    }
+    setId(id) {
+        this.id = id;
     }
     getNome() {
         return this.nome;
@@ -30,6 +36,9 @@ class Usuario extends main_1.DecoratedMongo {
         this.senha = senha;
     }
 }
+__decorate([
+    main_1.Id('usuario')
+], Usuario.prototype, "id", void 0);
 __decorate([
     main_1.Required()
 ], Usuario.prototype, "nome", void 0);
