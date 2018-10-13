@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import 'reflect-metadata';
 
 class ServiceMongoDb {
@@ -112,6 +112,7 @@ export class DecoratedMongo {
                 delete this[idKey];
                 dbo.collection(collectionName).find(this).limit(limit).toArray((err, result) => {
                     callback(err, result);
+                    db.close();
                 });
             }
         });
@@ -122,14 +123,14 @@ export class DecoratedMongo {
         const collectionName = Reflect.getMetadata('collection', this) as string;
         let mongoInstance = ServiceMongoDb.getInstance();
 
-        console.log(this[idKey]);
         this.initMongoServer(mongoInstance.getUrlMongo(), (error, db) => {
             if(error) {
                 callback(error);
             } else {
                 let dbo = db.db(mongoInstance.getDbMongo());
-                dbo.collection(collectionName).find({_id: this[idKey]}).toArray((err, result) => {
+                dbo.collection(collectionName).find({_id: new ObjectId(this[idKey])}).toArray((err, result) => {
                     callback(err, result);
+                    db.close();
                 });
             }
         });
