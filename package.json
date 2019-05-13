@@ -5,7 +5,8 @@
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "tsc && cd test && tsc && node index"
   },
   "keywords": [],
   "author": "",

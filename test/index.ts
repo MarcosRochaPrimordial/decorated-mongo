@@ -1,23 +1,20 @@
 import { Usuario } from "./usuario";
-import { MongoServer } from './../lib/main';
+import { Mongo } from './../lib/main';
+import { Endereco } from "./endereco";
 
-MongoServer.use('mongodb://localhost:27017', 'api');
+Mongo.use('mongodb://localhost:27017', 'teste');
+
+let endereco = new Endereco();
+endereco.setRua('rua j');
 
 let usuario = new Usuario();
-usuario.setNome("açslkdjf");
-usuario.setLogin("021983748");
-usuario.setSenha("asd5f44w9ef4s5d1f98w4f");
-/*usuario.save(err => {
-    if(err) {
-        console.log(err);
-    } else {*/
-        usuario.setId('5bc0bfc6305aed18b09efb8e');
-        usuario.find((err, result) => {
-            if(err) {
-                console.log(err);
-            } else {
-                console.log(result);
-            }
-        });
-    /*}
-});*/
+usuario.setNome('Marcos teste');
+usuario.setSenha('tfdxg');
+usuario.setLogin('açsldkfja');
+usuario.setEndereco(endereco);
+
+usuario.save((erros: string[]) => {
+    if (erros.length > 0) {
+        console.log(erros);
+    }
+});

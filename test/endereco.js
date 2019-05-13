@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const main_1 = require("./../lib/main");
-class Usuario extends main_1.MongoFunctions {
+class Endereco extends main_1.MongoFunctions {
     constructor() {
         super();
     }
@@ -17,45 +17,17 @@ class Usuario extends main_1.MongoFunctions {
     setId(codigo) {
         this.codigo = codigo;
     }
-    getNome() {
-        return this.nome;
+    getRua() {
+        return this.rua;
     }
-    setNome(nome) {
-        this.nome = nome;
-    }
-    getLogin() {
-        return this.login;
-    }
-    setLogin(login) {
-        this.login = login;
-    }
-    getSenha() {
-        return this.senha;
-    }
-    setSenha(senha) {
-        this.senha = senha;
-    }
-    getEndereco() {
-        return this.endereco;
-    }
-    setEndereco(endereco) {
-        this.endereco = endereco;
+    setRua(rua) {
+        this.rua = rua;
     }
 }
 __decorate([
     main_1.Id()
-], Usuario.prototype, "codigo", void 0);
+], Endereco.prototype, "codigo", void 0);
 __decorate([
     main_1.Required()
-], Usuario.prototype, "nome", void 0);
-__decorate([
-    main_1.Required()
-], Usuario.prototype, "login", void 0);
-__decorate([
-    main_1.Required()
-], Usuario.prototype, "senha", void 0);
-__decorate([
-    main_1.Join(),
-    main_1.Required()
-], Usuario.prototype, "endereco", void 0);
-exports.Usuario = Usuario;
+], Endereco.prototype, "rua", void 0);
+exports.Endereco = Endereco;

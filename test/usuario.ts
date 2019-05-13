@@ -1,7 +1,8 @@
-import { DecoratedMongo, Required, Id } from './../lib/main';
+import { Id, MongoFunctions, Required, Join } from './../lib/main';
+import { Endereco } from './endereco';
 
-export class Usuario extends DecoratedMongo {
-    @Id('usuario')
+export class Usuario extends MongoFunctions {
+    @Id()
     codigo: string;
 
     @Required()
@@ -12,6 +13,10 @@ export class Usuario extends DecoratedMongo {
 
     @Required()
     senha: string;
+
+    @Join()
+    @Required()
+    endereco: Endereco;
 
     constructor() {
         super();
@@ -47,5 +52,13 @@ export class Usuario extends DecoratedMongo {
 
     setSenha(senha: string) {
         this.senha = senha;
+    }
+
+    getEndereco(): Endereco {
+        return this.endereco;
+    }
+
+    setEndereco(endereco: Endereco) {
+        this.endereco = endereco;
     }
 }
