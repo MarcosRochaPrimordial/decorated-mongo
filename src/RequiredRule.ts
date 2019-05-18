@@ -1,8 +1,8 @@
 import { Rule } from './rule';
 
 export const RequiredRule: Rule = class {
-    static evaluate(object: Object, key: string): string {
-        if (object[key]) {
+    static evaluate(target: Object, key: string): string {
+        if (target[key]) {
             return null;
         }
 

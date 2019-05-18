@@ -5,7 +5,7 @@ import { Endereco } from "./endereco";
 Mongo.use('mongodb://localhost:27017', 'teste');
 
 let endereco = new Endereco();
-endereco.setRua('rua j');
+// endereco.setRua('rua j');
 
 let usuario = new Usuario();
 usuario.setNome('Marcos teste');

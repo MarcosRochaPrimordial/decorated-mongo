@@ -1,14 +1,20 @@
-import { Rule } from "./rule";
-import 'reflect-metadata';
 import { MongoDb } from './mongodb';
+import { ValidationService } from './validationService';
+import 'reflect-metadata';
 
 export class MongoFunctions {
+
+    private validationService: ValidationService
+
+    constructor() {
+        this.validationService = new ValidationService();
+    }
 
     public save(callback: any) {
         const collectionName = Reflect.getMetadata('collection-id', this);
         const idKey = Reflect.getMetadata('collection-id', this, collectionName);
 
-        let errors = this.validations() || [];
+        let errors = this.validation() || [];
 
         if (errors.length > 0) {
             callback(errors);
@@ -25,17 +31,11 @@ export class MongoFunctions {
         }
     }
 
-    private validations() {
+    private validation() {
+        let errors: string[] = [];
         const properties: string[] = Reflect.getMetadata('validation', this) || [];
-        const errors: string[] = [];
         properties.forEach(property => {
-            const rules: Rule[] = Reflect.getMetadata('validation', this, property) || [];
-            rules.forEach(rule => {
-                const error = rule.evaluate(this, property);
-                if (error) {
-                    errors.push(error);
-                }
-            });
+            errors = this.validationService.onSaveValidation(this, property);
         });
 
         return errors;
