@@ -25,7 +25,7 @@ export class Mongo {
         return this.urlMongo;
     }
 
-    public setUrlMongo(urlMongo: string) {
+    private setUrlMongo(urlMongo: string) {
         this.urlMongo = urlMongo;
     }
 
@@ -33,7 +33,7 @@ export class Mongo {
         return this.dbMongo;
     }
 
-    public setDbMongo(dbMongo: string) {
+    private setDbMongo(dbMongo: string) {
         this.dbMongo = dbMongo;
     }
 }

@@ -1,11 +1,12 @@
 import { Rule } from './rule';
 
 export const RequiredRule: Rule = class {
-    static evaluate(target: Object, key: string): string {
-        if (target[key]) {
+
+    public static evaluate(target: Object, key: string): void {
+        if (target[key] != null && target[key] !== undefined) {
             return null;
         }
 
-        return `${key} is required`;
+        throw new Error(`${target.constructor.name}.${key} is required`);
     }
 }

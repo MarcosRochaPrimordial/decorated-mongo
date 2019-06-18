@@ -29,10 +29,10 @@ function Required() {
     }
 }
 
-function Join() {
+function Collection() {
     return function (target: Object, propertyKey: string) {
         addRules(JoinRule, target, propertyKey);
     }
 }
 
-export { Id, Required, Join, MongoFunctions, Mongo }
+export { Id, Required, Collection, MongoFunctions, Mongo }

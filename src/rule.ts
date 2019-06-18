@@ -1,3 +1,3 @@
 export interface Rule {
-    evaluate(target: Object, key: string): string | string[];
+    evaluate(target: Object, key: string): void;
 }

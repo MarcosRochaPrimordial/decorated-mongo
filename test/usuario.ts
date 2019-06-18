@@ -1,4 +1,4 @@
-import { Id, MongoFunctions, Required, Join } from './../lib/main';
+import { Id, MongoFunctions, Required, Collection } from './../lib/main';
 import { Endereco } from './endereco';
 
 export class Usuario extends MongoFunctions {
@@ -14,7 +14,7 @@ export class Usuario extends MongoFunctions {
     @Required()
     senha: string;
 
-    @Join()
+    @Collection()
     @Required()
     endereco: Endereco;
 
