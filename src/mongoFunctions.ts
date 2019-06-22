@@ -8,24 +8,32 @@ export class MongoFunctions {
         const collectionName = Reflect.getMetadata('collection-id', this);
         const idKey = Reflect.getMetadata('collection-id', this, collectionName);
 
-        try {
-            this.validation();
+        const errors = this.validation();
+        if (errors.length > 0) {
+            callback(errors);
+        } else {
             MongoDb.insert(this, collectionName, (err) => {
-                if (err) throw new Error(err);
-
-                this[idKey] = this['_id'];
-                delete this['_id'];
+                if (err) {
+                    errors.push(err);
+                    callback(errors);
+                } else {
+                    this[idKey] = this['_id'];
+                    delete this['_id'];
+                }
             });
-        } catch (error) {
-            callback(error.message);
         }
     }
 
-    private validation() {
+    private validation(): string[] {
         const properties: string[] = Reflect.getMetadata('validation', this) || [];
         let validationService = new ValidationService();
+        let errors = [];
         properties.forEach(property => {
-            validationService.onSaveValidation(this, property);
+            const err = validationService.onSaveValidation(this, property);
+            if (err.length > 0) {
+                errors = errors.concat(err);
+            }
         });
+        return errors;
     }
 }
