@@ -1,19 +1,11 @@
-import { NotNull, MongoFunctions } from './../lib/main';
+import { NotNull, MongoCRUD } from './../lib/main';
 
-export class Endereco extends MongoFunctions {
+export class Endereco extends MongoCRUD {
 
     @NotNull()
     rua: string;
 
     constructor() {
         super();
-    }
-
-    getRua(): string {
-        return this.rua;
-    }
-
-    setRua(rua: string) {
-        this.rua = rua;
     }
 }

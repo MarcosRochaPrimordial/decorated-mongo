@@ -5,16 +5,17 @@ import { Endereco } from "./endereco";
 Mongo.use('mongodb://localhost:27017', 'teste');
 
 let endereco = new Endereco();
-endereco.setRua('rua j');
+endereco.rua = 'rua j';
 
 let usuario = new Usuario();
-usuario.setNome('Marcos teste');
-usuario.setSenha('tfdxg');
-usuario.setLogin('açsldkfja');
-usuario.setEndereco(endereco);
-
-usuario.save((erros: string[]) => {
-    if (erros.length > 0) {
-        console.log(erros);
-    }
+usuario.nome = 'Marcos teste';
+usuario.senha = 'tfdxg';
+usuario.login = 'açsldkfja';
+usuario.endereco = endereco;
+usuario.save()
+.then(() => {
+    console.log(usuario);
+})
+.catch((erros: string[]) => {
+    if (erros.length > 0) console.log(erros);
 });

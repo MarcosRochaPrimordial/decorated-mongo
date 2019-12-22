@@ -1,16 +1,17 @@
 import { MongoServer } from './mongoServer';
 
 export class MongoDb {
-    public static insert(registry: any, collectionName: string, callback: any) {
-        MongoServer.initMongoServer((error, db, dbInstance) => {
-            if (error) {
-                callback(error);
-            } else {
-                db.collection(collectionName).insertOne(registry, err => {
-                    callback(err);
+    public static insert(registry: any, collectionName: string) {
+        return new Promise((resolve, reject) => {
+            MongoServer.initMongoServer()
+                .then(({ db, dbInstance }) => {
+                    db.collection(collectionName).insertOne(registry);
                     dbInstance.close();
+                    resolve();
+                })
+                .catch((err) => {
+                    reject(err);
                 });
-            }
         });
     }
 }

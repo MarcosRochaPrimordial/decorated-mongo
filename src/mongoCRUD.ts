@@ -2,26 +2,29 @@ import { MongoDb } from './mongodb';
 import { ValidationService } from './validationService';
 import 'reflect-metadata';
 
-export class MongoFunctions {
+export class MongoCRUD {
 
-    public save(callback: any) {
+    public save() {
         const collectionName = Reflect.getMetadata('collection-id', this);
         const idKey = Reflect.getMetadata('collection-id', this, collectionName);
 
-        const errors = this.validation();
-        if (errors.length > 0) {
-            callback(errors);
-        } else {
-            MongoDb.insert(this, collectionName, (err) => {
-                if (err) {
-                    errors.push(err);
-                    callback(errors);
-                } else {
-                    this[idKey] = this['_id'];
-                    delete this['_id'];
-                }
-            });
-        }
+        return new Promise((resolve, reject) => {
+            const errors = this.validation();
+            if (errors.length > 0) {
+                reject(errors);
+            } else {
+                MongoDb.insert(this, collectionName)
+                    .then(() => {
+                        this[idKey] = this['_id'];
+                        delete this['_id'];
+                        resolve();
+                    })
+                    .catch(err => {
+                        errors.push(err);
+                        reject(errors);
+                    });
+            }
+        });
     }
 
     private validation(): string[] {

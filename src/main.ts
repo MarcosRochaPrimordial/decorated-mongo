@@ -1,4 +1,4 @@
-import { MongoFunctions } from './mongoFunctions';
+import { MongoCRUD } from './mongoCRUD';
 import { Mongo } from './mongo';
 import { RequiredRule } from './RequiredRule';
 import { JoinRule } from './JoinRule';
@@ -35,4 +35,4 @@ function Collection() {
     }
 }
 
-export { Id, NotNull, Collection, MongoFunctions, Mongo }
+export { Id, NotNull, Collection, MongoCRUD, Mongo }

@@ -2,10 +2,16 @@ import { MongoClient } from "mongodb";
 import { Mongo } from './mongo';
 
 export class MongoServer {
-    public static initMongoServer(callback) {
+    public static initMongoServer() {
         let mongoInstance = Mongo.getInstance();
-        MongoClient.connect(mongoInstance.getUrlMongo(), { useNewUrlParser: true }, (err, db) => {
-            callback(err, db.db(mongoInstance.getDbMongo()), db);
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(mongoInstance.getUrlMongo(), { useNewUrlParser: true })
+                .then((db) => {
+                    resolve({ db: db.db(mongoInstance.getDbMongo()), dbInstance: db });
+                })
+                .catch((err) => {
+                    reject(err);
+                });
         });
     }
 }
