@@ -1,8 +1,8 @@
-import { Required, MongoFunctions } from './../lib/main';
+import { NotNull, MongoFunctions } from './../lib/main';
 
 export class Endereco extends MongoFunctions {
 
-    @Required()
+    @NotNull()
     rua: string;
 
     constructor() {

@@ -23,7 +23,7 @@ function Id() {
     }
 }
 
-function Required() {
+function NotNull() {
     return function (target: Object, propertyKey: string) {
         addRules(RequiredRule, target, propertyKey);
     }
@@ -35,4 +35,4 @@ function Collection() {
     }
 }
 
-export { Id, Required, Collection, MongoFunctions, Mongo }
+export { Id, NotNull, Collection, MongoFunctions, Mongo }

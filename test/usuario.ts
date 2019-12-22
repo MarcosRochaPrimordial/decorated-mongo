@@ -1,21 +1,21 @@
-import { Id, MongoFunctions, Required, Collection } from './../lib/main';
+import { Id, MongoFunctions, NotNull, Collection } from './../lib/main';
 import { Endereco } from './endereco';
 
 export class Usuario extends MongoFunctions {
     @Id()
     codigo: string;
 
-    @Required()
+    @NotNull()
     nome: string;
 
-    @Required()
+    @NotNull()
     login: string;
 
-    @Required()
+    @NotNull()
     senha: string;
 
     @Collection()
-    @Required()
+    @NotNull()
     endereco: Endereco;
 
     constructor() {
