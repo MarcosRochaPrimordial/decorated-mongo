@@ -15,8 +15,7 @@ export class MongoCRUD {
             } else {
                 MongoDb.insert(this, collectionName)
                     .then(() => {
-                        this[idKey] = this['_id'];
-                        delete this['_id'];
+                        this.revertId(idKey);
                         resolve();
                     })
                     .catch(err => {
@@ -25,6 +24,13 @@ export class MongoCRUD {
                     });
             }
         });
+    }
+
+    public find() {
+        const collectionName = Reflect.getMetadata('collection-id', this);
+        const idKey = Reflect.getMetadata('collection-id', this, collectionName);
+        this.revertId(idKey);
+        return MongoDb.find(this, collectionName);
     }
 
     private validation(): string[] {
@@ -38,5 +44,15 @@ export class MongoCRUD {
             }
         });
         return errors;
+    }
+
+    private revertId(idKey: string) {
+        if (!!this['_id']) {
+            this[idKey] = this['_id'];
+            delete this['_id'];
+        } else {
+            this['_id'] = this[idKey];
+            delete this[idKey];
+        }
     }
 }

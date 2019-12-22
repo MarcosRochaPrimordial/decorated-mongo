@@ -5,17 +5,22 @@ import { Endereco } from "./endereco";
 Mongo.use('mongodb://localhost:27017', 'teste');
 
 let endereco = new Endereco();
-endereco.rua = 'rua j';
+endereco.rua = 'Av cagaço';
 
 let usuario = new Usuario();
-usuario.nome = 'Marcos teste';
-usuario.senha = 'tfdxg';
-usuario.login = 'açsldkfja';
+usuario.nome = 'Marcos teste 2';
+usuario.senha = 'ich weise dir nicht';
+usuario.login = 'login';
 usuario.endereco = endereco;
 usuario.save()
-.then(() => {
-    console.log(usuario);
-})
-.catch((erros: string[]) => {
-    if (erros.length > 0) console.log(erros);
-});
+    .then(() => {
+        delete usuario.nome;
+        delete usuario.senha;
+        delete usuario.login;
+        usuario.find()
+            .then(results => console.log(results))
+            .catch(errors => console.log('errow: ', errors));
+    })
+    .catch((erros: string[]) => {
+        if (erros.length > 0) console.log(erros);
+    });
