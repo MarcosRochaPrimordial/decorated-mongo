@@ -1,26 +1,23 @@
 import { Usuario } from "./usuario";
-import { Mongo } from './../lib/main';
+import { Mongo, Fndr, MongoCRUD } from './../lib/main';
 import { Endereco } from "./endereco";
+import { Conta } from "./conta";
 
 Mongo.use('mongodb://localhost:27017', 'teste');
 
-let endereco = new Endereco();
-endereco.rua = 'Av cagaço';
-
-let usuario = new Usuario();
-usuario.nome = 'Marcos teste 2';
-usuario.senha = 'ich weise dir nicht';
-usuario.login = 'login';
-usuario.endereco = endereco;
-usuario.save()
+let conta1 = new Conta(85);
+let conta2 = new Conta(150);
+let conta3 = new Conta(198);
+Promise.all([
+    conta1.save(), conta2.save(), conta3.save()
+])
     .then(() => {
-        delete usuario.nome;
-        delete usuario.senha;
-        delete usuario.login;
-        usuario.find()
+        const wheres = Fndr.or(
+            Fndr.where('saldo').lesser(100),
+            Fndr.where('saldo').greater(150)
+        );
+        MongoCRUD.findWhere(Conta, wheres)
             .then(results => console.log(results))
-            .catch(errors => console.log('errow: ', errors));
+            .catch(errors => console.log(errors));
     })
-    .catch((erros: string[]) => {
-        if (erros.length > 0) console.log(erros);
-    });
+    .catch(errs => console.log(errs));

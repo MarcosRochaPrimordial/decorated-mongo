@@ -2,6 +2,8 @@ import { MongoCRUD } from './mongoCRUD';
 import { Mongo } from './mongo';
 import { RequiredRule } from './RequiredRule';
 import { JoinRule } from './JoinRule';
+import { Fndr } from './fndr';
+import { MongoDocument } from './mongoDocument';
 import 'reflect-metadata';
 
 function addRules(rule: any, target: Object, propertyKey: string) {
@@ -35,4 +37,4 @@ function Collection() {
     }
 }
 
-export { Id, NotNull, Collection, MongoCRUD, Mongo }
+export { Id, NotNull, Collection, MongoCRUD, Mongo, Fndr, MongoDocument }

@@ -4,16 +4,18 @@ import 'reflect-metadata';
 
 export class MongoCRUD {
 
-    public save() {
-        const collectionName = Reflect.getMetadata('collection-id', this);
-        const idKey = Reflect.getMetadata('collection-id', this, collectionName);
+    private static collectionId: string = 'collection-id';
+
+    public static save(registry: object) {
+        const collectionName = Reflect.getMetadata(this.collectionId, registry);
+        const idKey = Reflect.getMetadata(this.collectionId, registry, collectionName);
 
         return new Promise((resolve, reject) => {
             const errors = this.validation();
             if (errors.length > 0) {
                 reject(errors);
             } else {
-                MongoDb.insert(this, collectionName)
+                MongoDb.insert(registry, collectionName)
                     .then(() => {
                         this.revertId(idKey);
                         resolve();
@@ -26,14 +28,26 @@ export class MongoCRUD {
         });
     }
 
-    public find() {
-        const collectionName = Reflect.getMetadata('collection-id', this);
-        const idKey = Reflect.getMetadata('collection-id', this, collectionName);
+    public static find(registry: object) {
+        const collectionName = Reflect.getMetadata(this.collectionId, registry);
+        const idKey = Reflect.getMetadata(this.collectionId, registry, collectionName);
         this.revertId(idKey);
-        return MongoDb.find(this, collectionName);
+        return new Promise((resolve, reject) => {
+            MongoDb.find(registry, collectionName)
+            .then((results: any[]) => resolve(this.revertIdArray(results, idKey)))
+            .catch((errors) => reject(errors));
+        });
     }
 
-    private validation(): string[] {
+    public static findWhere(collection: any, clauses: object) {
+        return new Promise((resolve, reject) => {
+            MongoDb.find(clauses, collection.name)
+            .then((results: any[]) => resolve(this.revertIdArray(results, idKey)))
+            .catch((errors) => reject(errors));
+        });
+    }
+
+    private static validation(): string[] {
         const properties: string[] = Reflect.getMetadata('validation', this) || [];
         let validationService = new ValidationService();
         let errors = [];
@@ -46,13 +60,17 @@ export class MongoCRUD {
         return errors;
     }
 
-    private revertId(idKey: string) {
+    private static revertId(idKey: string) {
         if (!!this['_id']) {
             this[idKey] = this['_id'];
             delete this['_id'];
-        } else {
+        } else if (!!this[idKey]) {
             this['_id'] = this[idKey];
             delete this[idKey];
         }
+    }
+
+    private static revertIdArray(results, idKey) {
+        return results.map(value => ({...value, [idKey]: value['_id']}));
     }
 }

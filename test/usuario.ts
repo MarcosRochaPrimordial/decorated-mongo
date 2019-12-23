@@ -1,7 +1,7 @@
-import { Id, MongoCRUD, NotNull, Collection } from './../lib/main';
+import { Id, MongoDocument, NotNull, Collection } from './../lib/main';
 import { Endereco } from './endereco';
 
-export class Usuario extends MongoCRUD {
+export class Usuario extends MongoDocument {
     @Id()
     codigo: string;
 
