@@ -16,7 +16,7 @@ export class Usuario extends MongoDocument {
 
     @Collection()
     @NotNull()
-    endereco: Endereco;
+    endereco: Endereco[];
 
     constructor() {
         super();

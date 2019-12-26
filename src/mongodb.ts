@@ -19,6 +19,7 @@ export class MongoDb {
                 .then(({ db, dbInstance }) => {
                     db.collection(collectionName)
                         .find(registry)
+                        .project({_id:0})
                         .toArray((errors, results) => {
                             if (errors) reject(errors);
                             resolve(results);

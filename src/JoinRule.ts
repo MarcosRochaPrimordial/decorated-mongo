@@ -4,19 +4,33 @@ import 'reflect-metadata';
 
 export const JoinRule: Rule = class {
 
+    private static validate: string = 'validation';
+
     public static evaluate(target: Object, key: string): string[] {
-        let validationService = new ValidationService();
         let errors = [];
         if (target[key]) {
-            const properties: string[] = Reflect.getMetadata('validation', target[key]) || [];
-            properties.forEach(property => {
-                const err = validationService.onSaveValidation(target[key], property);
-                if (err.length > 0) {
-                    errors = errors.concat(err);
-                }
-            });
+            if (Array.isArray(target[key])) {
+                target[key].forEach(value => {
+                    errors = this.verifyValidations(value);
+                });
+            } else {
+                errors = this.verifyValidations(target[key]);
+            }
         }
 
+        return errors;
+    }
+
+    private static verifyValidations(value: any): any[] {
+        let validationService = new ValidationService();
+        const properties: string[] = Reflect.getMetadata(this.validate, value) || [];
+        let errors = [];
+        properties.forEach(property => {
+            const err = validationService.onSaveValidation(value, property);
+            if (err.length > 0) {
+                errors = errors.concat(err);
+            }
+        });
         return errors;
     }
 }
