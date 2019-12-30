@@ -2,6 +2,7 @@ import { MongoDb } from './mongodb';
 import { ValidationService } from './validationService';
 import 'reflect-metadata';
 import { ObjectID } from 'mongodb';
+import { Modifier } from './main';
 
 export class MongoCRUD {
 
@@ -31,21 +32,28 @@ export class MongoCRUD {
         });
     }
 
-    public static find(registry: object) {
+    public static find(registry: object, modifier?: Modifier) {
         const collectionName = Reflect.getMetadata(this.collectionId, registry);
-        return new Promise((resolve, reject) => {
-            MongoDb.find(registry, collectionName)
-                .then((results: any[]) => resolve(results))
-                .catch((errors) => reject(errors));
-        });
+        return MongoDb.find(registry, collectionName, modifier);
     }
 
-    public static findWhere(collection: any, clauses: object) {
-        return new Promise((resolve, reject) => {
-            MongoDb.find(clauses, collection.name)
-                .then((results: any[]) => resolve(results))
-                .catch((errors) => reject(errors));
-        });
+    public static findWhere(collection: any, clauses?: object, modifier?: Modifier) {
+        const clause = clauses ? clauses : { };
+        return MongoDb.find(clause, collection.name, modifier);
+    }
+
+    public static delete(registry: object) {
+        const collectionName = Reflect.getMetadata(this.collectionId, registry);
+        return MongoDb.deleteMany(registry, collectionName);
+    }
+
+    public static deleteWhere(collection: any, clauses: object) {
+        return MongoDb.deleteMany(clauses, collection.name);
+    }
+
+    public static update(registry: object, clauses: object) {
+        const collectionName = Reflect.getMetadata(this.collectionId, registry);
+        return MongoDb.update(clauses, registry, collectionName);
     }
 
     private static validation(registry: any): string[] {

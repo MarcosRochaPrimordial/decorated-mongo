@@ -1,4 +1,4 @@
-import { MongoCRUD } from "./main";
+import { MongoCRUD, Modifier } from "./main";
 
 export class MongoDocument {
 
@@ -6,7 +6,16 @@ export class MongoDocument {
         return MongoCRUD.save(this);
     }
 
-    public find() {
-        return MongoCRUD.find(this);
+    public find(modifier?: Modifier) {
+        return MongoCRUD.find(this, modifier);
     }
+
+    public delete() {
+        return MongoCRUD.delete(this);
+    }
+
+    public update(clauses: object) {
+        return MongoCRUD.update(this, clauses);
+    }
+
 }

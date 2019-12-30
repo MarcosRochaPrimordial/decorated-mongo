@@ -3,6 +3,7 @@ import { Mongo } from './mongo';
 import { RequiredRule } from './RequiredRule';
 import { JoinRule } from './JoinRule';
 import { Fndr } from './fndr';
+import { Modifier } from './modifier';
 import { MongoDocument } from './mongoDocument';
 import 'reflect-metadata';
 
@@ -37,4 +38,4 @@ function Collection() {
     }
 }
 
-export { Id, NotNull, Collection, MongoCRUD, Mongo, Fndr, MongoDocument }
+export { Id, NotNull, Collection, MongoCRUD, Mongo, Fndr, Modifier, MongoDocument }

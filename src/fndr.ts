@@ -1,3 +1,5 @@
+import { ObjectID } from "mongodb";
+
 export class Fndr {
     private key = '';
 
@@ -17,21 +19,37 @@ export class Fndr {
         return { $or: finders };
     }
 
-    public greater(value: number | string) {
+    private define(expression: object) {
         const query = {};
-        query[this.key] = { $gt: value };
+        query[this.key] = expression;
         return query;
+    }
+
+    public greater(value: number | string) {
+        return this.define({ $gt: value });
     }
 
     public lesser(value: number | string) {
-        const query = {};
-        query[this.key] = { $lt: value };
-        return query;
+        return this.define({ $lt: value });
     }
 
     public equals(value: number | string) {
-        const query = {};
-        query[this.key] = { $eq: value };
-        return query;
+        return this.define({ $eq: value });
+    }
+
+    public in(...value: number[] | string[] | ObjectID[]) {
+        return this.define({ $in: [...value] });
+    }
+    
+    public all(...value: number[] | string[] | ObjectID[]) {
+        return this.define({ $all: [...value] });
+    }
+
+    public regex(value: string) {
+        return this.define({ $regex: value });
+    }
+
+    public exits(value: boolean) {
+        return this.define({ $exists: value });
     }
 }
