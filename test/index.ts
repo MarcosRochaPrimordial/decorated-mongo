@@ -1,13 +1,16 @@
 import { Usuario } from "./usuario";
-import { Mongo, Fndr, MongoCRUD, Modifier } from './../lib/main';
+import { Fndr, MongoCRUD, Modifier, Mongo } from './../lib/main';
 import { Endereco } from "./endereco";
 import { Conta } from "./conta";
 
-Mongo.use('mongodb://localhost:27017', 'teste');
+let usuario = new Usuario();
+usuario.nome = 'Marcos Nome';
+usuario.fone = '81990908765';
 
-const modifier = new Modifier().limit(1).skip(0);
-modifier.sort('nome').asc();
+Mongo.use('mongodb://localhost:27017', 'teste')
 
-MongoCRUD.findWhere(Usuario, null, modifier)
-    .then(results => console.log(results))
-    .catch(err => console.log(err));
+usuario.update(Fndr.where('nome').equals('Marcos Nome 6'))
+    .then(() => {
+        console.log('Finished');
+    })
+    .catch((err) => console.log(err));

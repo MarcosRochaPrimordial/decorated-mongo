@@ -1,4 +1,4 @@
-import { Id, MongoDocument, NotNull, Collection } from './../lib/main';
+import { Id, MongoDocument, NotNull, Join } from './../lib/main';
 import { Endereco } from './endereco';
 
 export class Usuario extends MongoDocument {
@@ -13,8 +13,11 @@ export class Usuario extends MongoDocument {
 
     @NotNull()
     senha: string;
+    
+    @NotNull()
+    fone: string;
 
-    @Collection()
+    @Join()
     @NotNull()
     endereco: Endereco[];
 

@@ -32,10 +32,10 @@ function NotNull() {
     }
 }
 
-function Collection() {
+function Join() {
     return function (target: Object, propertyKey: string) {
         addRules(JoinRule, target, propertyKey);
     }
 }
 
-export { Id, NotNull, Collection, MongoCRUD, Mongo, Fndr, Modifier, MongoDocument }
+export { Id, NotNull, Join, MongoCRUD, Mongo, Fndr, Modifier, MongoDocument }

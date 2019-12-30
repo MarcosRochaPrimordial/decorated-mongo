@@ -49,15 +49,16 @@ export class MongoDb {
         });
     }
 
-    public static update(clauses: object, registry: object, collectionName: string) {
+    public static updateMany(clauses: object, registry: object, collectionName: string) {
         return new Promise((resolve, reject) => {
             MongoServer.initMongoServer()
                 .then(({ db, dbInstance }) => {
                     db.collection(collectionName)
-                        .update(clauses, registry);
+                        .updateMany(clauses, { $set: registry });
                     dbInstance.close();
                     resolve();
-                });
+                })
+                .catch(err => reject(err));
         });
     }
 }

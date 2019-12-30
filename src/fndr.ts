@@ -37,6 +37,10 @@ export class Fndr {
         return this.define({ $eq: value });
     }
 
+    public notEquals(value: number | string) {
+        return this.define({ $ne: value });
+    }
+
     public in(...value: number[] | string[] | ObjectID[]) {
         return this.define({ $in: [...value] });
     }

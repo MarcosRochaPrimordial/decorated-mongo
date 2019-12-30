@@ -53,7 +53,7 @@ export class MongoCRUD {
 
     public static update(registry: object, clauses: object) {
         const collectionName = Reflect.getMetadata(this.collectionId, registry);
-        return MongoDb.update(clauses, registry, collectionName);
+        return MongoDb.updateMany(clauses, registry, collectionName);
     }
 
     private static validation(registry: any): string[] {

@@ -28,6 +28,9 @@ export class Modifier {
     }
 
     querySort() {
+        if (!this.field) {
+            return {};
+        }
         return { [this.field]: this.order }
     }
 
