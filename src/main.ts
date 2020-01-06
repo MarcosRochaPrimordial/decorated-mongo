@@ -1,11 +1,11 @@
 import { MongoCRUD } from './mongoCRUD';
-import { Mongo } from './mongo';
 import { RequiredRule } from './RequiredRule';
 import { JoinRule } from './JoinRule';
 import { Fndr } from './fndr';
 import { Modifier } from './modifier';
 import { MongoDocument } from './mongoDocument';
 import 'reflect-metadata';
+import * as dotenv from 'dotenv';
 
 function addRules(rule: any, target: Object, propertyKey: string) {
     const properties: string[] = Reflect.getMetadata('validation', target) || [];
@@ -38,4 +38,4 @@ function Join() {
     }
 }
 
-export { Id, NotNull, Join, MongoCRUD, Mongo, Fndr, Modifier, MongoDocument }
+export { Id, NotNull, Join, MongoCRUD, Fndr, Modifier, MongoDocument }

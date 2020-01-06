@@ -1,13 +1,15 @@
 import { MongoClient } from "mongodb";
-import { Mongo } from './mongo';
 
 export class MongoServer {
     public static initMongoServer() {
-        let mongoInstance = Mongo.getInstance();
         return new Promise((resolve, reject) => {
-            MongoClient.connect(mongoInstance.getUrlMongo(), { useNewUrlParser: true })
+            const options = {
+                useNewUrlParser: true,
+            }
+            console.log(process.env.DATABASE_URL);
+            MongoClient.connect(process.env.DATABASE_URL, options)
                 .then((db) => {
-                    resolve({ db: db.db(mongoInstance.getDbMongo()), dbInstance: db });
+                    resolve({ db: db.db(process.env.DATABASE_NAME), dbInstance: db });
                 })
                 .catch((err) => {
                     reject(err);
