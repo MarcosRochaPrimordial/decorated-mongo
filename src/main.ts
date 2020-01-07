@@ -5,7 +5,7 @@ import { Fndr } from './fndr';
 import { Modifier } from './modifier';
 import { MongoDocument } from './mongoDocument';
 import 'reflect-metadata';
-import * as dotenv from 'dotenv';
+require('dotenv').config();
 
 function addRules(rule: any, target: Object, propertyKey: string) {
     const properties: string[] = Reflect.getMetadata('validation', target) || [];

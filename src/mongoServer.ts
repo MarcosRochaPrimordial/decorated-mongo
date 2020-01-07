@@ -6,7 +6,6 @@ export class MongoServer {
             const options = {
                 useNewUrlParser: true,
             }
-            console.log(process.env.DATABASE_URL);
             MongoClient.connect(process.env.DATABASE_URL, options)
                 .then((db) => {
                     resolve({ db: db.db(process.env.DATABASE_NAME), dbInstance: db });
