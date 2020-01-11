@@ -1,15 +1,13 @@
-import { Id, NotNull, MongoDocument } from "./../lib/main";
+import { Id, NotNull, MongoDocument, DefaultNull } from "./../lib/main";
 
 export class Conta extends MongoDocument {
 
     @Id()
-    codigo: number;
+    codigo: string;
 
     @NotNull()
     saldo: number;
 
-    constructor(saldo: number) {
-        super();
-        this.saldo = saldo;
-    }
+    @DefaultNull()
+    contaConjunta: boolean;
 }

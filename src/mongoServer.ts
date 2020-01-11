@@ -5,6 +5,7 @@ export class MongoServer {
         return new Promise((resolve, reject) => {
             const options = {
                 useNewUrlParser: true,
+                useUnifiedTopology: true
             }
             MongoClient.connect(process.env.DATABASE_URL, options)
                 .then((db) => {

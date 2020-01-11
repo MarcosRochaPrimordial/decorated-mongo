@@ -3,7 +3,7 @@ import { ObjectID } from "mongodb";
 export class Fndr {
     private key = '';
 
-    constructor(key: string) {
+    private constructor(key: string) {
         this.key = key;
     }
 

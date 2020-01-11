@@ -6,8 +6,8 @@ export class MongoDocument {
         return MongoCRUD.save(this);
     }
 
-    public find(modifier?: Modifier) {
-        return MongoCRUD.find(this, modifier);
+    public find<T>(modifier?: Modifier): Promise<T> {
+        return MongoCRUD.find<T>(this, modifier);
     }
 
     public delete() {

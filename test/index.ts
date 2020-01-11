@@ -1,4 +1,6 @@
-import { Usuario } from "./usuario";
-import { MongoCRUD } from "../lib/main";
+import { Conta } from './conta';
 
-MongoCRUD.findWhere(Usuario).then(result => console.log(result)).catch(err => console.log(err));
+let conta = new Conta();
+conta.saldo = 300;
+
+conta.save().then(() => console.log('finished')).catch(err => console.log(err));

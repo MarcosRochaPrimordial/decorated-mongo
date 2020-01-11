@@ -8,17 +8,17 @@ export class MongoCRUD {
 
     private static collectionId: string = 'collection-id';
     private static validate: string = 'validation';
+    private static insertNull: string = 'insert-null';
 
     public static save(registry: object) {
         const collectionName = Reflect.getMetadata(this.collectionId, registry);
-        const idKey = Reflect.getMetadata(this.collectionId, registry, collectionName);
 
         return new Promise((resolve, reject) => {
             const errors = this.validation(registry);
             if (errors.length > 0) {
                 reject(errors);
             } else {
-                registry[idKey] = new ObjectID();
+                registry = this.modifyRegistry(registry);
                 MongoDb.insert(registry, collectionName)
                     .then(() => {
                         this.deleteId(registry);
@@ -32,14 +32,17 @@ export class MongoCRUD {
         });
     }
 
-    public static find(registry: object, modifier?: Modifier) {
+    public static find<T>(registry: object, modifier?: Modifier): Promise<T> {
         const collectionName = Reflect.getMetadata(this.collectionId, registry);
-        return MongoDb.find(registry, collectionName, modifier);
+        const idKey = Reflect.getMetadata(this.collectionId, registry, collectionName);
+
+        registry[idKey] = new ObjectID(registry[idKey]);
+        return MongoDb.find<T>(registry, collectionName, modifier);
     }
 
-    public static findWhere(collection: any, clauses?: object, modifier?: Modifier) {
+    public static findWhere<T>(collection: any, clauses?: object, modifier?: Modifier): Promise<T> {
         const clause = clauses ? clauses : { };
-        return MongoDb.find(clause, collection.name, modifier);
+        return MongoDb.find<T>(clause, collection.name, modifier);
     }
 
     public static delete(registry: object) {
@@ -71,5 +74,20 @@ export class MongoCRUD {
 
     private static deleteId(registry: any) {
         delete registry['_id'];
+    }
+
+    private static modifyRegistry(registry: object) {
+        const collectionName = Reflect.getMetadata(this.collectionId, registry);
+        const idKey = Reflect.getMetadata(this.collectionId, registry, collectionName);
+        registry[idKey] = new ObjectID();
+        
+        const properties = Reflect.getMetadata(this.insertNull, registry) || [];
+        properties.forEach(property => {
+            if (registry[property] === undefined) {
+                registry[property] = null;
+            }
+        });
+
+        return registry;
     }
 }

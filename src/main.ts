@@ -32,10 +32,18 @@ function NotNull() {
     }
 }
 
+function DefaultNull() {
+    return function (target: Object, propertyKey: string) {
+        const properties: string[] = Reflect.getMetadata('insert-null', target) || [];
+        properties.push(propertyKey);
+        Reflect.defineMetadata('insert-null', properties, target);
+    }
+}
+
 function Join() {
     return function (target: Object, propertyKey: string) {
         addRules(JoinRule, target, propertyKey);
     }
 }
 
-export { Id, NotNull, Join, MongoCRUD, Fndr, Modifier, MongoDocument }
+export { Id, NotNull, DefaultNull, Join, MongoCRUD, Fndr, Modifier, MongoDocument }

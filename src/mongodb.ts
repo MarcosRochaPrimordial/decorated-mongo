@@ -15,7 +15,7 @@ export class MongoDb {
         });
     }
 
-    public static find(registry: any, collectionName: string, modifier?: Modifier) {
+    public static find<T>(registry: object, collectionName: string, modifier?: Modifier): Promise<T> {
         return new Promise((resolve, reject) => {
             const mod = modifier ? modifier : new Modifier();
             MongoServer.initMongoServer()
