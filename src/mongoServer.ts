@@ -7,7 +7,8 @@ export class MongoServer {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             }
-            MongoClient.connect(process.env.DATABASE_URL, options)
+            const url = `mongodb://${process.env.DATABASE_USER}:${process.env.DATABASE_PWD}@${process.env.DATABASE_URL}/?authSource=${process.env.DATABASE_NAME}`
+            MongoClient.connect(url, options)
                 .then((db) => {
                     resolve({ db: db.db(process.env.DATABASE_NAME), dbInstance: db });
                 })
